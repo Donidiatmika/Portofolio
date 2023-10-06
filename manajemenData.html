@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toko Smartphone</title>
+    <style>
+        body {
+            background-color: #efe4f5; 
+            font-family: Arial, sans-serif;
+        }
+        #app {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 50px;
+        }
+        h1 {
+            text-align: center;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 10px;
+            background-color: #e3efff;
+            padding: 10px;
+            border: 2px solid #ecaaaa; /* Ganti warna border yang benar */
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        li img {
+            max-width: 100px;
+            max-height: 100px;
+        }
+        li button {
+            background-color: #d26046;
+            color: #fff;
+            border: none;
+            padding: 10px 20px; /* Sedikit perbesar padding */
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .button-container {
+            display: flex;
+            gap: 10px; /* Beri jarak antara tombol Portofolio dan KALKULATOR */
+        }
+        .product-info {
+            display: flex;
+            flex-direction: column;
+        }
+        .product-info p {
+            margin: 0;
+            margin-right: 10px;
+        }
+        .product-info button {
+            margin-top: 10px;
+        }
+        .product-description {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .total {
+            font-weight: bold;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="button-container">
+        <button id="portfolio-button"><a href="index.html" style="text-decoration: none; color: rgb(92, 129, 242)">Portofolio</a></button>
+        <button id="calculator-button"><a href="fibonacci.html" style="text-decoration: none; color: rgb(92, 129, 242);">Fibonacci</a></button>
+    </div>
+    <div id="app">
+        <h1>Toko Smartphone</h1>
+
+        <h2>Daftar Produk</h2>
+        <ul>
+            <li v-for="(product, index) in products" :key="index">
+                <div class="product-info">
+                    <img :src="product.image" alt="Gambar Produk">
+                    <div>
+                        <p>{{ product.name }} - ${{ product.price }}</p>
+                        <button @click="toggleDescription(index)">Lihat Produk</button>
+                    </div>
+                    <div class="product-description" v-if="product.showDescription">{{ product.desc }}</div>
+                </div>
+                <button @click="addToCart(index)">Tambahkan ke Daftar</button>
+            </li>
+        </ul>
+
+        <h2>Daftar Belanja</h2>
+        <ul>
+            <li v-for="(cartItem, index) in cart" :key="index">
+                <div class="product-info">
+                    <img :src="cartItem.image" alt="Gambar Produk">
+                    <p>{{ cartItem.name }} - $ {{ cartItem.price }}</p>
+                </div>
+                <button @click="removeFromCart(index)">Hapus dari Daftar</button>
+            </li>
+        </ul>
+
+        <div class="total">
+            <p>Total Belanjaan: $ {{ totalBelanjaan }}</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+    <script>
+        new Vue({
+        el: '#app',
+  data: {
+  products: [
+{
+   name: 'Poco F5',
+   price: 1000,
+   desc: 'Poco F5 adalah smartphone canggih dengan kinerja luar biasa. Ditenagai oleh prosesor kuat, layar berkualitas tinggi, dan fitur-fitur inovatif, Poco F5 adalah pilihan yang sempurna bagi pecinta teknologi.',
+   image: 'f5.jpeg',
+   showDescription: false 
+},
+{
+    name: ' Samsung 23 ultra',
+    price: 2000,
+    desc: 'iPhone 15 adalah salah satu produk terbaru dari Apple. Dikenal dengan desain elegan, kamera canggih, dan performa yang tangguh, iPhone 15 adalah smartphone yang membawa pengalaman pengguna ke level berikutnya.',
+    image: 's23.jpeg',
+    showDescription: false 
+},
+{
+   name: ' Iphone 15',
+   price: 3000,
+   desc: 'Samsung 23 Ultra adalah flagship terbaru dari Samsung. Dengan layar AMOLED besar, sistem kamera hebat, dan fitur-fitur canggih, Samsung 23 Ultra adalah pilihan terbaik untuk mereka yang mencari smartphone premium.',
+   image: 'iphone15pro.jpeg',
+   showDescription: false 
+},
+{
+   name: ' infinix 30',
+   price: 300,
+   desc: ' Infinix 30 adalah smartphone yang menawarkan teknologi mutakhir dengan harga terjangkau. Dengan fitur-fitur seperti layar yang tajam, kamera yang canggih, dan performa yang solid, Infinix 30 adalah pilihan yang menarik untuk pengguna yang mencari smartphone yang dapat diandalkan.',
+   image: 'infinix.jpeg',
+   showDescription: false 
+},
+{
+   name: ' redmi note 10',
+   price: 350,
+   desc: 'Redmi Note 10 adalah salah satu pilihan populer dalam jajaran Redmi. Dikenal dengan layar yang cerah, daya tahan baterai yang luar biasa, dan fitur kamera yang menarik, Redmi Note 10 adalah smartphone yang sangat serbaguna.',
+   image: 'redmi note 10.jpeg',
+   showDescription: false 
+},
+{
+   name: ' Poco m4 pro',
+   price: 400,
+   desc: ' Poco M4 Pro adalah smartphone yang menawarkan kombinasi luar biasa antara harga terjangkau dan performa yang solid. Dengan layar berkualitas tinggi, prosesor kuat, dan sistem kamera yang canggih, Poco M4 Pro cocok untuk pengguna yang mencari nilai tambah dalam smartphone mereka.',
+   image: 'm4.jpeg',
+   showDescription: false 
+},
+            ],
+            cart: []
+        },
+        computed: {
+            totalBelanjaan: function () {
+                return this.cart.reduce((total, item) => total + item.price, 0);
+            }
+        },
+        methods: {
+            addToCart: function (index) {
+                this.cart.push({ ...this.products[index] });
+            },
+            removeFromCart: function (index) {
+                this.cart.splice(index, 1);
+            },
+            toggleDescription: function (index) {
+                this.products[index].showDescription = !this.products[index].showDescription;
+            }
+        }
+    });
+    </script>
+</body>
+</html>
